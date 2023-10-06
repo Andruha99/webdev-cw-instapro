@@ -37,7 +37,11 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
     document.getElementById("add-button").addEventListener("click", () => {
       const addPostInput = document.querySelector(".add-post-input");
       onAddPostClick({
-        description: addPostInput.value,
+        description: addPostInput.value
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("&", "&amp;"),
         imageUrl: imageUrl,
       });
     });
