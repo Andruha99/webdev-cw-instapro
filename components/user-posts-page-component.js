@@ -3,7 +3,6 @@ import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
 
 export function renderUserPostsComponent({ appEl }) {
-  appEl.innerHTML = "ользователя";
   const postsHtml = posts
     .map((post) => {
       return `<li class="post">
@@ -16,7 +15,11 @@ export function renderUserPostsComponent({ appEl }) {
         </div>
         <div class="post-likes">
           <button data-post-id="${post.id}" class="like-button">
-            <img src="./assets/images/like-not-active.svg">
+             ${
+               post.isLiked
+                 ? '<img src="./assets/images/like-active.svg">'
+                 : '<img src="./assets/images/like-not-active.svg">'
+             }
           </button>
           <p class="post-likes-text">
             Нравится: <strong>${post.likes.length}</strong>

@@ -106,3 +106,39 @@ export function getUserPosts({ userId, token }) {
       return responseData.posts;
     });
 }
+
+// Добавить лайк
+
+export function addLike({ postId, token }) {
+  return fetch(postsHost + "/" + postId + "/like", {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log(responseData);
+    });
+}
+
+// Убрать лайк
+
+export function deleteLike({ postId, token }) {
+  return fetch(postsHost + "/" + postId + "/dislike", {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log(responseData);
+    });
+}
