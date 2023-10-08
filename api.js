@@ -87,3 +87,22 @@ export function setPost({ token, description, imageUrl }) {
     console.log(response);
   });
 }
+
+// Посты одного пользователя
+
+export function getUserPosts({ userId, token }) {
+  return fetch(postsHost + "/user-posts/" + userId, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      console.log(response);
+      return response.json();
+    })
+    .then((responseData) => {
+      console.log(responseData.posts);
+      return responseData.posts;
+    });
+}
