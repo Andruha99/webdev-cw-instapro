@@ -162,6 +162,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           })
           .catch((error) => {
             console.warn(error);
+            if (error.message === "Такой пользователь уже существует") {
+              alert("Такой пользователь уже существует, введите новые данные");
+            }
             setError(error.message);
           });
       }

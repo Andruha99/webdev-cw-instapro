@@ -55,16 +55,20 @@ export const goToPage = (newPage, data) => {
       page = LOADING_PAGE;
       renderApp();
 
-      return getPosts({ token: getToken() })
-        .then((newPosts) => {
-          page = POSTS_PAGE;
-          posts = newPosts;
-          renderApp();
-        })
-        .catch((error) => {
-          console.error(error);
-          goToPage(POSTS_PAGE);
-        });
+      return getPosts({ token: getToken() }).then((newPosts) => {
+        page = POSTS_PAGE;
+        posts = newPosts;
+        renderApp();
+      });
+      // .catch((error) => {
+      //   if (error.message === "Нет авторизации") {
+      //     alert("Лайкать посты могут только авторизированные пользоваетели");
+      //   } else {
+      //     alert("Какие-то проблемы с сетью. Попробуйте позже");
+      //   }
+      //   console.log(error);
+      //   goToPage(POSTS_PAGE);
+      // });
     }
 
     if (newPage === USER_POSTS_PAGE) {
@@ -80,7 +84,12 @@ export const goToPage = (newPage, data) => {
           renderApp();
         })
         .catch((error) => {
-          console.error(error);
+          if (error.message === "Нет авторизации") {
+            alert("Лайкать посты могут только авторизированные пользоваетели");
+          } else {
+            alert("Какие-то проблемы с сетью. Попробуйте позже");
+          }
+          console.log(error);
           goToPage(POSTS_PAGE);
         });
     }
@@ -123,9 +132,20 @@ const renderApp = () => {
       onAddPostClick({ description, imageUrl }) {
         // TODO: реализовать добавление поста в API
         console.log("Добавляю пост...", { description, imageUrl });
-        setPost({ token: getToken(), description, imageUrl });
-        renderPostsPageComponent({ appEl });
-        goToPage(POSTS_PAGE);
+        setPost({ token: getToken(), description, imageUrl })
+          .then(() => {
+            renderPostsPageComponent({ appEl });
+            goToPage(POSTS_PAGE);
+          })
+          .catch((error) => {
+            if (
+              error.message === "Картинка и описание должны быть обязательно"
+            ) {
+              alert(
+                "Картинка и описание должны быть обязательно. Проверьте правильность введённых данных"
+              );
+            }
+          });
       },
     });
   }

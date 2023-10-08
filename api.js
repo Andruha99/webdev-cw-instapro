@@ -84,6 +84,9 @@ export function setPost({ token, description, imageUrl }) {
       imageUrl,
     }),
   }).then((response) => {
+    if (response.status === 400) {
+      throw new Error("Картинка и описание должны быть обязательно");
+    }
     console.log(response);
   });
 }
@@ -117,6 +120,9 @@ export function addLike({ postId, token }) {
     },
   })
     .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
       console.log(response);
       return response.json();
     })
@@ -135,6 +141,9 @@ export function deleteLike({ postId, token }) {
     },
   })
     .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
       console.log(response);
       return response.json();
     })

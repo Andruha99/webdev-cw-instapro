@@ -74,41 +74,45 @@ export function renderUserPostsComponent({ appEl }) {
       console.log(likeBtn.dataset);
       console.log(typeof likeBtn.dataset.postIsliked);
       if (likeBtn.dataset.postIsliked === "false") {
-        addLike({ postId: likeBtn.dataset.postId, token: getToken() }).then(
-          (response) => {
+        addLike({ postId: likeBtn.dataset.postId, token: getToken() })
+          .then((response) => {
             // likeBtn.dataset.isLiked = true;
             goToPage(USER_POSTS_PAGE, {
               userId: likeBtn.dataset.userId,
             });
             console.log(response);
-          }
-        );
+          })
+          .catch((error) => {
+            if (error.message === "Нет авторизации") {
+              alert(
+                "Лайкать посты могут только авторизированные пользоваетели"
+              );
+            } else {
+              alert("Какие-то проблемы с сетью. Попробуйте позже");
+            }
+            console.log(error);
+            goToPage(POSTS_PAGE);
+          });
       } else {
-        deleteLike({ postId: likeBtn.dataset.postId, token: getToken() }).then(
-          (response) => {
-            // likeBtn.dataset.isLiked = true;
+        deleteLike({ postId: likeBtn.dataset.postId, token: getToken() })
+          .then((response) => {
             goToPage(USER_POSTS_PAGE, {
               userId: likeBtn.dataset.userId,
             });
             console.log(response);
-          }
-        );
+          })
+          .catch((error) => {
+            if (error.message === "Нет авторизации") {
+              alert(
+                "Лайкать посты могут только авторизированные пользоваетели"
+              );
+            } else {
+              alert("Какие-то проблемы с сетью. Попробуйте позже");
+            }
+            console.log(error);
+            goToPage(POSTS_PAGE);
+          });
       }
-      // if (likeBtn.dataset.isliked === "true") {
-      //   deleteLike({ postId: likeBtn.dataset.postId, token: getToken() }).then(
-      //     () => {
-      //       // likeBtn.dataset.isLiked = false;
-      //       // goToPage(POSTS_PAGE);
-      //     }
-      //   );
-      // } else {
-      //   addLike({ postId: likeBtn.dataset.postId, token: getToken() }).then(
-      //     () => {
-      //       // likeBtn.dataset.isLiked = true;
-      //       // goToPage(POSTS_PAGE);
-      //     }
-      //   );
-      // }
     });
   }
 }

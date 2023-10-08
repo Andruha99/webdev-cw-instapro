@@ -2,6 +2,8 @@ import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, getToken } from "../index.js";
 import { addLike, deleteLike } from "../api.js";
+import { formatDistance } from "date-fns";
+import { ru } from "date-fns/locale";
 
 export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
@@ -9,6 +11,9 @@ export function renderPostsPageComponent({ appEl }) {
 
   const postsHtml = posts
     .map((post, index) => {
+      const now = formatDistance(new Date(), new Date(post.createdAt), {
+        locale: ru,
+      });
       return `<li class="post">
         <div class="post-header" data-user-id="${post.user.id}">
            <img src="${post.user.imageUrl}" class="post-header__user-image">
@@ -37,7 +42,7 @@ export function renderPostsPageComponent({ appEl }) {
           ${post.description}
         </p>
         <p class="post-date">
-          ${post.createdAt}
+          ${now}
         </p>
       </li>`;
     })
@@ -75,37 +80,40 @@ export function renderPostsPageComponent({ appEl }) {
       console.log(likeBtn.dataset);
       console.log(typeof likeBtn.dataset.postIsliked);
       if (likeBtn.dataset.postIsliked === "false") {
-        addLike({ postId: likeBtn.dataset.postId, token: getToken() }).then(
-          (response) => {
-            // likeBtn.dataset.isLiked = true;
+        addLike({ postId: likeBtn.dataset.postId, token: getToken() })
+          .then((response) => {
             goToPage(POSTS_PAGE);
             console.log(response);
-          }
-        );
+          })
+          .catch((error) => {
+            if (error.message === "Нет авторизации") {
+              alert(
+                "Лайкать посты могут только авторизированные пользоваетели"
+              );
+            } else {
+              alert("Какие-то проблемы с сетью. Попробуйте позже");
+            }
+            console.log(error);
+            goToPage(POSTS_PAGE);
+          });
       } else {
-        deleteLike({ postId: likeBtn.dataset.postId, token: getToken() }).then(
-          (response) => {
-            // likeBtn.dataset.isLiked = true;
+        deleteLike({ postId: likeBtn.dataset.postId, token: getToken() })
+          .then((response) => {
             goToPage(POSTS_PAGE);
             console.log(response);
-          }
-        );
+          })
+          .catch((error) => {
+            if (error.message === "Нет авторизации") {
+              alert(
+                "Лайкать посты могут только авторизированные пользоваетели"
+              );
+            } else {
+              alert("Какие-то проблемы с сетью. Попробуйте позже");
+            }
+            console.log(error);
+            goToPage(POSTS_PAGE);
+          });
       }
-      // if (likeBtn.dataset.isliked === "true") {
-      //   deleteLike({ postId: likeBtn.dataset.postId, token: getToken() }).then(
-      //     () => {
-      //       // likeBtn.dataset.isLiked = false;
-      //       // goToPage(POSTS_PAGE);
-      //     }
-      //   );
-      // } else {
-      //   addLike({ postId: likeBtn.dataset.postId, token: getToken() }).then(
-      //     () => {
-      //       // likeBtn.dataset.isLiked = true;
-      //       // goToPage(POSTS_PAGE);
-      //     }
-      //   );
-      // }
     });
   }
 }
