@@ -12,4 +12,4 @@ https://andruha99.github.io/webdev-cw-instapro/
 
 ## Фактически затраченное время
 
-35 часов
+38 часов
