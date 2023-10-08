@@ -20,7 +20,6 @@ export function getPosts({ token }) {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
       return data.posts;
     });
 }
@@ -84,7 +83,9 @@ export function setPost({ token, description, imageUrl }) {
       imageUrl,
     }),
   }).then((response) => {
-    console.log(response);
+    if (response.status === 400) {
+      throw new Error("Картинка и описание должны быть обязательно");
+    }
   });
 }
 
@@ -98,11 +99,9 @@ export function getUserPosts({ userId, token }) {
     },
   })
     .then((response) => {
-      console.log(response);
       return response.json();
     })
     .then((responseData) => {
-      console.log(responseData.posts);
       return responseData.posts;
     });
 }
@@ -115,14 +114,12 @@ export function addLike({ postId, token }) {
     headers: {
       Authorization: token,
     },
-  })
-    .then((response) => {
-      console.log(response);
-      return response.json();
-    })
-    .then((responseData) => {
-      console.log(responseData);
-    });
+  }).then((response) => {
+    if (response.status === 401) {
+      throw new Error("Нет авторизации");
+    }
+    return response.json();
+  });
 }
 
 // Убрать лайк
@@ -133,12 +130,10 @@ export function deleteLike({ postId, token }) {
     headers: {
       Authorization: token,
     },
-  })
-    .then((response) => {
-      console.log(response);
-      return response.json();
-    })
-    .then((responseData) => {
-      console.log(responseData);
-    });
+  }).then((response) => {
+    if (response.status === 401) {
+      throw new Error("Нет авторизации");
+    }
+    return response.json();
+  });
 }

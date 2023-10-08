@@ -62,14 +62,17 @@ export const goToPage = (newPage, data) => {
           renderApp();
         })
         .catch((error) => {
-          console.error(error);
+          if (error.message === "Нет авторизации") {
+            alert("Лайкать посты могут только авторизированные пользоваетели");
+          } else {
+            alert("Какие-то проблемы с сетью. Попробуйте позже");
+          }
           goToPage(POSTS_PAGE);
         });
     }
 
     if (newPage === USER_POSTS_PAGE) {
       // TODO: реализовать получение постов юзера из API
-      console.log("Открываю страницу пользователя: ", data.userId);
       page = LOADING_PAGE;
       renderApp();
 
@@ -80,7 +83,11 @@ export const goToPage = (newPage, data) => {
           renderApp();
         })
         .catch((error) => {
-          console.error(error);
+          if (error.message === "Нет авторизации") {
+            alert("Лайкать посты могут только авторизированные пользоваетели");
+          } else {
+            alert("Какие-то проблемы с сетью. Попробуйте позже");
+          }
           goToPage(POSTS_PAGE);
         });
     }
@@ -122,10 +129,20 @@ const renderApp = () => {
       appEl,
       onAddPostClick({ description, imageUrl }) {
         // TODO: реализовать добавление поста в API
-        console.log("Добавляю пост...", { description, imageUrl });
-        setPost({ token: getToken(), description, imageUrl });
-        renderPostsPageComponent({ appEl });
-        goToPage(POSTS_PAGE);
+        setPost({ token: getToken(), description, imageUrl })
+          .then(() => {
+            renderPostsPageComponent({ appEl });
+            goToPage(POSTS_PAGE);
+          })
+          .catch((error) => {
+            if (
+              error.message === "Картинка и описание должны быть обязательно"
+            ) {
+              alert(
+                "Картинка и описание должны быть обязательно. Проверьте правильность введённых данных"
+              );
+            }
+          });
       },
     });
   }
