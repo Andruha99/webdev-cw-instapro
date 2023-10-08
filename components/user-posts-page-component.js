@@ -67,12 +67,9 @@ export function renderUserPostsComponent({ appEl }) {
   }
 
   const likesBtn = document.querySelectorAll(".like-button");
-  console.log(likesBtn);
 
   for (let likeBtn of likesBtn) {
     likeBtn.addEventListener("click", () => {
-      console.log(likeBtn.dataset);
-      console.log(typeof likeBtn.dataset.postIsliked);
       if (likeBtn.dataset.postIsliked === "false") {
         addLike({ postId: likeBtn.dataset.postId, token: getToken() })
           .then((response) => {
@@ -80,7 +77,6 @@ export function renderUserPostsComponent({ appEl }) {
             goToPage(USER_POSTS_PAGE, {
               userId: likeBtn.dataset.userId,
             });
-            console.log(response);
           })
           .catch((error) => {
             if (error.message === "Нет авторизации") {
@@ -90,7 +86,6 @@ export function renderUserPostsComponent({ appEl }) {
             } else {
               alert("Какие-то проблемы с сетью. Попробуйте позже");
             }
-            console.log(error);
             goToPage(POSTS_PAGE);
           });
       } else {
@@ -99,7 +94,6 @@ export function renderUserPostsComponent({ appEl }) {
             goToPage(USER_POSTS_PAGE, {
               userId: likeBtn.dataset.userId,
             });
-            console.log(response);
           })
           .catch((error) => {
             if (error.message === "Нет авторизации") {
@@ -109,7 +103,6 @@ export function renderUserPostsComponent({ appEl }) {
             } else {
               alert("Какие-то проблемы с сетью. Попробуйте позже");
             }
-            console.log(error);
             goToPage(POSTS_PAGE);
           });
       }

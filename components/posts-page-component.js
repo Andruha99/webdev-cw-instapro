@@ -7,7 +7,6 @@ import { ru } from "date-fns/locale";
 
 export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
-  console.log("Актуальный список постов:", posts);
 
   const postsHtml = posts
     .map((post, index) => {
@@ -73,17 +72,13 @@ export function renderPostsPageComponent({ appEl }) {
   }
 
   const likesBtn = document.querySelectorAll(".like-button");
-  console.log(likesBtn);
 
   for (let likeBtn of likesBtn) {
     likeBtn.addEventListener("click", () => {
-      console.log(likeBtn.dataset);
-      console.log(typeof likeBtn.dataset.postIsliked);
       if (likeBtn.dataset.postIsliked === "false") {
         addLike({ postId: likeBtn.dataset.postId, token: getToken() })
           .then((response) => {
             goToPage(POSTS_PAGE);
-            console.log(response);
           })
           .catch((error) => {
             if (error.message === "Нет авторизации") {
@@ -93,14 +88,12 @@ export function renderPostsPageComponent({ appEl }) {
             } else {
               alert("Какие-то проблемы с сетью. Попробуйте позже");
             }
-            console.log(error);
             goToPage(POSTS_PAGE);
           });
       } else {
         deleteLike({ postId: likeBtn.dataset.postId, token: getToken() })
           .then((response) => {
             goToPage(POSTS_PAGE);
-            console.log(response);
           })
           .catch((error) => {
             if (error.message === "Нет авторизации") {
@@ -110,7 +103,6 @@ export function renderPostsPageComponent({ appEl }) {
             } else {
               alert("Какие-то проблемы с сетью. Попробуйте позже");
             }
-            console.log(error);
             goToPage(POSTS_PAGE);
           });
       }
