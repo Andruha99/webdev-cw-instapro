@@ -1,18 +1,11 @@
-import { POSTS_PAGE, USER_POSTS_PAGE } from "../routes.js";
+import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage, getToken } from "../index.js";
 import { addLike, deleteLike } from "../api.js";
-import { formatDistance } from "date-fns";
-import { ru } from "date-fns/locale";
 
-export function renderPostsPageComponent({ appEl }) {
-  // TODO: реализовать рендер постов из api
-
+export function renderUserPostsComponent({ appEl }) {
   const postsHtml = posts
     .map((post, index) => {
-      const now = formatDistance(new Date(), new Date(post.createdAt), {
-        locale: ru,
-      });
       return `<li class="post">
         <div class="post-header" data-user-id="${post.user.id}">
            <img src="${post.user.imageUrl}" class="post-header__user-image">
@@ -24,7 +17,9 @@ export function renderPostsPageComponent({ appEl }) {
         <div class="post-likes">
           <button data-index=${index} data-post-id="${
         post.id
-      }" data-post-isLiked=${post.isLiked} class="like-button">
+      }" data-post-isLiked=${post.isLiked} data-user-id=${
+        post.user.id
+      } class="like-button">
             ${
               post.isLiked
                 ? '<img src="./assets/images/like-active.svg">'
@@ -41,7 +36,7 @@ export function renderPostsPageComponent({ appEl }) {
           ${post.description}
         </p>
         <p class="post-date">
-          ${now}
+          ${post.createdAt}
         </p>
       </li>`;
     })
@@ -78,7 +73,10 @@ export function renderPostsPageComponent({ appEl }) {
       if (likeBtn.dataset.postIsliked === "false") {
         addLike({ postId: likeBtn.dataset.postId, token: getToken() })
           .then((response) => {
-            goToPage(POSTS_PAGE);
+            // likeBtn.dataset.isLiked = true;
+            goToPage(USER_POSTS_PAGE, {
+              userId: likeBtn.dataset.userId,
+            });
           })
           .catch((error) => {
             if (error.message === "Нет авторизации") {
@@ -93,7 +91,9 @@ export function renderPostsPageComponent({ appEl }) {
       } else {
         deleteLike({ postId: likeBtn.dataset.postId, token: getToken() })
           .then((response) => {
-            goToPage(POSTS_PAGE);
+            goToPage(USER_POSTS_PAGE, {
+              userId: likeBtn.dataset.userId,
+            });
           })
           .catch((error) => {
             if (error.message === "Нет авторизации") {

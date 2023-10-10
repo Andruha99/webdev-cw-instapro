@@ -79,8 +79,18 @@ export function renderAuthPageComponent({ appEl, setUser }) {
       setError("");
 
       if (isLoginMode) {
-        const login = document.getElementById("login-input").value;
-        const password = document.getElementById("password-input").value;
+        const login = document
+          .getElementById("login-input")
+          .value.replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("&", "&amp;");
+        const password = document
+          .getElementById("password-input")
+          .value.replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("&", "&amp;");
 
         if (!login) {
           alert("Введите логин");
@@ -104,9 +114,24 @@ export function renderAuthPageComponent({ appEl, setUser }) {
             setError(error.message);
           });
       } else {
-        const login = document.getElementById("login-input").value;
-        const name = document.getElementById("name-input").value;
-        const password = document.getElementById("password-input").value;
+        const login = document
+          .getElementById("login-input")
+          .value.replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("&", "&amp;");
+        const name = document
+          .getElementById("name-input")
+          .value.replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("&", "&amp;");
+        const password = document
+          .getElementById("password-input")
+          .value.replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("&", "&amp;");
         if (!name) {
           alert("Введите имя");
           return;
@@ -137,6 +162,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           })
           .catch((error) => {
             console.warn(error);
+            if (error.message === "Такой пользователь уже существует") {
+              alert("Такой пользователь уже существует, введите новые данные");
+            }
             setError(error.message);
           });
       }
